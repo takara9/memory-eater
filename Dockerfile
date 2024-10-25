@@ -4,9 +4,10 @@ COPY main.c /usr/src/myapp
 RUN gcc -o mem-eater main.c
 
 FROM ubuntu:oracular
-WORKDIR /app
-COPY --from=build /usr/src/myapp/mem-eater mem-eater
+#FROM alpine:3.20.3
+WORKDIR /
+COPY --from=build /usr/src/myapp/mem-eater /mem-eater
 USER 65534:65534
 
-ENTRYPOINT ["/app/mem-eater"]
+ENTRYPOINT ["/mem-eater"]
 CMD ["1","5","10"]
