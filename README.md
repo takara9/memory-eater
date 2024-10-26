@@ -16,7 +16,8 @@ docker run -it ghcr.io/takara9/mem-eater:0.1 1 10 5
 ## ビルド方法
 
 ```
-docker build -t ghcr.io/takara9/mem-eater:0.2 .
-docker push
+docker login
+docker build -t ghcr.io/takara9/mem-eater:0.1 .
+docker push ghcr.io/takara9/mem-eater:0.1
 ```
 

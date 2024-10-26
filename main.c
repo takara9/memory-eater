@@ -21,7 +21,7 @@ int sleep2(int sleep_sec) {
     struct timeval tv;
     char* inputval;
 
-    fd = open("/tmp/xxx", O_RDONLY|O_CREAT);
+    fd = open("data", O_RDONLY);
 
     FD_ZERO(&rfds);
     FD_SET(fd, &rfds);
@@ -47,7 +47,7 @@ void sigterm_handler(int sig) {
     mem-eater 10 20 10  1Gi から 2Gi　まで10秒のインターバル
 */
 int main(int argc, char *argv[]) {
-    char *p[1024];
+    char **p;
     unsigned int init_size_mb, last_size_mb, sleep_time, i, j, current_size;
 
     signal(SIGTERM, sigterm_handler);
@@ -58,6 +58,8 @@ int main(int argc, char *argv[]) {
     current_size = init_size_mb *100;
 
     j = last_size_mb - init_size_mb;
+    p = (char **)malloc(sizeof(char)*j);
+
     for (i=0;i <= j;i++) {
         if (i == 0) {
             p[i] = memory_eater(init_size_mb * 100);
@@ -66,6 +68,7 @@ int main(int argc, char *argv[]) {
             current_size = current_size + 100;
         }
         printf("i= %d\t %d\n", i, current_size);
+        fflush(stdout);
         sleep2(sleep_time);
     }
     sleep2(0);
