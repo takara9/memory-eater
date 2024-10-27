@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guranteed
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mem-eater-gura
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mem-eater-gura
+    spec:
+      nodeName: node2
+      containers:
+      - name: mem-eater
+        image: ghcr.io/takara9/mem-eater:0.2
+        args:
+        - "1"
+        - "10"
+        - "5"
+        - "guranteed"
+        resources:
+          limits:
+            memory: "1005Mi"
+            cpu: 0.1
+          requests:
+            memory: "1005Mi"
+            cpu: 0.1
