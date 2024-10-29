@@ -1,0 +1,8 @@
+NAME                          CPU(cores)   MEMORY(bytes)   
+besteffort-657f6c859c-b4gnx   1m           1002Mi          
+boostable-7f657bc6d7-8l2g6    0m           1002Mi          
+guranteed-69875c65d6-87rzl    0m           1002Mi          
+guranteed-69875c65d6-8xslq    0m           1002Mi          
+guranteed-69875c65d6-pvt8m    0m           1002Mi          
+guranteed-69875c65d6-qbdq5    0m           1002Mi          
+guranteed-69875c65d6-t8ccx    0m           1003Mi          

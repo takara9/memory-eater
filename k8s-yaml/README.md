@@ -97,8 +97,53 @@ evictionHardに、メモリを設定
   - kubeReserved: N/A
   - evictionHard: {memory: "800Mi"}
 
+- ケース5
+  systemReserved と kubeReserved　にそれぞれ　１Gづつ設定、合計　２Gが使用できない
+
+
+
 
 ### テスト結果
+
+
+
+systemReserved と kubeReserved の設定が無い時
+  QoSクラスの優先度で(BestEffort < Boostable < Guranteed) のポッドのコンテナから OOM-Killされて、ポッドが何度も再スタートする。 
+  Podが他のノードへ退避されることは無い。
+
+systemReserved と kubeReserved 設定した場合
+  Podが他のノードへ退避されることは無い。
+  ノードのAllocatableのメモリが減少して、スケジュールが抑止される。
+  しかし、ノードセレクターなどが付いている場合、Allocatableのメモリを超えて、ポッドが配置される。
+  さらに、超えると「OutOfmemory」状態のポッドが大量に発生して、そのポッドのコントローラーを消さないと削除できなくなる。（K8sのバグっぽい）
+
+systemReserved と kubeReserved の設定が無く、evictionHard や evictionSoft を設定した場合
+  OOM-Killedされず、他のノードへ退避される。ただし、退避されたポッドが ErrorやUnknown Statusで残ることがある。（K8sのバグっぽい）
+  このケースはメモリ不足となっているノードから、他のノードへポッドが移動するので、ノードのメモリ不足対策として、もっとも有効だと思われる。
+
+evictionHard と evictionSoft のどちらを設定するべきか？
+  evictionSoftは、
+    設定値がAllocatableのメモリの減算に使われない
+    猶予時間を設定できるため、アプリにとって優しい。
+    コンテナがOOMでKillされることを回避できる
+
+  evictionHard
+    設定値がAllocatableのメモリの減算に使われる
+    猶予時間を設定できない。
+    コンテナがOOMでKillされることを回避できる
+ 
+ 対策の提案
+ メモリ不足でノードが応答不能になる対策として、SystemReserved と kubeReservedは、現状どおりとして、evictionSoftを設定するのが良いと考えれる。
+
+
+言葉の整理
+  - systemReserved: systemReserved is a set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=150G) pairs that describe resources reserved for non-kubernetes components. Currently only cpu and memory are supported. 
+  - kubeReserved: kubeReserved is a set of ResourceName=ResourceQuantity (e.g. cpu=200m,memory=150G) pairs that describe resources reserved for kubernetes system components. Currently cpu, memory and local storage for root file system are supported.
+  - OOM-Killは、Linuxカーネルが自身の保護のため、プロセスを強制終了する。 優先度を設定でき、kubeletはポッドのコンテナをQoSクラスに合わせて、優先度を設定している。
+
+
+
+
 
 
 
