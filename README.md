@@ -20,7 +20,7 @@ docker run -it ghcr.io/takara9/mem-eater:0.2 1 10 5
 
 ```
 docker login
-docker build -t ghcr.io/takara9/mem-eater:0.2 .
-docker push ghcr.io/takara9/mem-eater:0.2
+docker build -t ghcr.io/takara9/mem-eater:0.3 .
+docker push ghcr.io/takara9/mem-eater:0.3
 ```
 

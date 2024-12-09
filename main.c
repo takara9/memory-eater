@@ -6,11 +6,11 @@
 #include <signal.h>
 #include<fcntl.h>
 
-char *memory_eater(int size) {
-    unsigned int sz = 1024*1024 * size; // MB
+char *memory_eater(unsigned long size) {
+    unsigned long sz = 1024*1024 * size; // MB
     char *p = malloc(sz);
     char *pp = p;
-    unsigned int i;
+    unsigned long i;
     memset(p, 0x41, sz);
     return p;
 }
@@ -48,7 +48,7 @@ void sigterm_handler(int sig) {
 */
 int main(int argc, char *argv[]) {
     char **p;
-    unsigned int init_size_mb, last_size_mb, sleep_time, i, j, current_size;
+    unsigned long init_size_mb, last_size_mb, sleep_time, i, j, current_size;
 
     signal(SIGTERM, sigterm_handler);
 
